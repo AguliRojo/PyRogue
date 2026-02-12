@@ -55,10 +55,9 @@ def generate_enemy():  # laziest way
     return enemy_coordinates
 
 def generate_map():
-    world_map = world_map_dimensions
-    world_map[hero_coordinates[0]][hero_coordinates[1]] = MapTiles.hero
-    world_map[enemy_coordinates[0]][enemy_coordinates[1]] = MapTiles.enemy
-    return world_map
+    world_map_dimensions[hero_coordinates[0]][hero_coordinates[1]] = MapTiles.hero
+    world_map_dimensions[enemy_coordinates[0]][enemy_coordinates[1]] = MapTiles.enemy
+    return world_map_dimensions
 
 
 def display_map():
@@ -85,12 +84,34 @@ def action_table():
 
 def move_table():
     """Tables used for alternative button"""
-    up = ["w"]
-    left = ["a"]
-    right = ["d"]
-    down = ["s"]
-    quit = ["q"]
+    moveset = {
+    "w" : [-1,0],
+    "a" : [0,-1],
+    "d" : [0,1],
+    "s" : [1,0],
+    "q" : "q",
+    }
+    return moveset
 
+def move_action(action):
+    hero_location = world_map_dimensions[hero_coordinates[0]][hero_coordinates[1]]
+    print(f'{MapTiles.hero} - hero location\n{hero_coordinates[0]+1} - x\n{hero_coordinates[1]+1} - y')
+    if action in move_table():
+        print(move_table())
+        dx, dy = move_table()[action]
+        hero_coordinates[0] += dx
+        hero_coordinates[1] += dy
+        if hero_coordinates[0] < 0 or hero_coordinates[0] > len(display_map()[0]):
+            hero_coordinates[0] -= dx
+            hero_coordinates[1] -= -dy
+            print("Invalid move, you've hit a wall")
+        if hero_coordinates[1] < 0 or hero_coordinates[1] > len(display_map()[1]):
+            hero_coordinates[0] -= dx
+            hero_coordinates[1] -= -dy
+            print("Invalid move, you've hit a wall")
+        print(f'{MapTiles.hero} - hero location\n{hero_coordinates[0]+1} - x\n{hero_coordinates[1]+1} - y')
+    else:
+        print("Invalid move")
 
 def game_loop(your_name):
     if your_name == "":
@@ -100,6 +121,7 @@ def game_loop(your_name):
     while True:
         display_map()
         action = input("your move: ")
-        if action == "q":
-            return False
+        move_action(action)
+        # if action == "q":
+        #     return False
 game_loop(Your_name)

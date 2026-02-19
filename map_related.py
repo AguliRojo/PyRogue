@@ -15,6 +15,9 @@ def move_table(action):
     return moveset[action]
 
 def populate_map(map, enemies):
+    """Add enemies, hero.
+    Show map(temporarily to prevent overuse of calling same function)
+    """
     x_dimension = len(map[0])
     y_dimension = len(map)
     print(f'x:{x_dimension}\ny:{y_dimension}')
